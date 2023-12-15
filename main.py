@@ -21,11 +21,104 @@
 #    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import tkinter
+from tkinter import ttk
 from yelpapi import YelpAPI 
 
+
+def set_data():
+    yelp_params = {
+    "location": False,
+    "term": False,
+    "radius": False,
+    "limit": False,
+    "sort_by": False
+    }
+
+    temp_params = yelp_params.copy()
+
+    locaton_choice = location_input.get()
+    term_choice = term_input.get()
+    radius_choice = radius_spinbox.get()
+    limit_choice = limit_spinbox.get()
+    sort_by_choice = sort_by_combobox.get()
+
+    choice_list = [locaton_choice, term_choice, radius_choice, limit_choice, sort_by_choice]
+    print(choice_list)
+    print(temp_params)
+
+    for keys in temp_params:
+        for n in choice_list:
+            if n is not 0 or '':
+                temp_params[keys] = n
+
+    final_params = {}
+
+    for keys in temp_params:
+        if temp_params[keys] is not False:
+            final_params[keys] = temp_params[keys]
+
+    yelp_params = final_params
+    print(yelp_params)
+ 
+
+def display():
+    print("Hello")
+
+
 window = tkinter.Tk()
+window.title("Yelp Business Call List")
+
+frame = tkinter.Frame(window)
+frame.pack()
+
+api_frame = tkinter.LabelFrame(frame, text="Enter YelpAPI Key")
+api_frame.grid(row=0, column=0)
+
+api_label = tkinter.Label(api_frame, text="API Key (required)")
+api_label.grid(row=0, column=0)
+
+api_input = tkinter.Entry(api_frame)
+api_input.grid(row=1, column=0)
+
+search_terms_frame = tkinter.LabelFrame(frame, text= "Search Terms")
+search_terms_frame.grid(row= 1, column=0, padx=20, pady=20)
+
+location_label = tkinter.Label(search_terms_frame, text="Location (required)")
+location_label.grid(row=0, column=0)
+
+term_label = tkinter.Label(search_terms_frame, text= "Search Term")
+term_label.grid(row=0, column=1)
+
+radius_label = tkinter.Label(search_terms_frame, text="Radius (max = 40000 meters)")
+radius_spinbox = tkinter.Spinbox(search_terms_frame, from_=0, to=40000)
+radius_label.grid(row=0, column=2)
+radius_spinbox.grid(row=1, column=2)
+
+limit_label = tkinter.Label(search_terms_frame, text= "Limit (max = 50)")
+limit_spinbox = tkinter.Spinbox(search_terms_frame, from_=0, to=50)
+limit_label.grid(row=0, column=3)
+limit_spinbox.grid(row=1, column=3)
+
+location_input = tkinter.Entry(search_terms_frame)
+location_input.grid(row=1, column=0)
+term_input = tkinter.Entry(search_terms_frame)
+term_input.grid(row=1, column=1)
+
+
+sort_by_label = tkinter.Label(search_terms_frame, text="Sort By")
+sort_by_combobox = ttk.Combobox(search_terms_frame, values=["", "best_match", "rating", "review_count", "distance"])
+sort_by_label.grid(row=2, column=0)
+sort_by_combobox.grid(row=3, column=0)
+
+# Buttons
+set_button = tkinter.Button(frame, text="Set Terms", command=set_data)
+set_button.grid(row=2, column=0)
+
+display_button = tkinter.Button(frame, text="Display Results", command=display)
+display_button.grid(row=2, column=1)
 
 window.mainloop()
+
 
 
 def search(api_key):
