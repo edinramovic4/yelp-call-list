@@ -26,15 +26,7 @@ from yelpapi import YelpAPI
 
 
 def set_data():
-    yelp_params = {
-    "location": False,
-    "term": False,
-    "radius": False,
-    "limit": False,
-    "sort_by": False
-    }
-
-    temp_params = yelp_params.copy()
+    keys = ["location", "term", "radius", "limit", "sort_by"]
 
     locaton_choice = location_input.get()
     term_choice = term_input.get()
@@ -42,23 +34,19 @@ def set_data():
     limit_choice = limit_spinbox.get()
     sort_by_choice = sort_by_combobox.get()
 
-    choice_list = [locaton_choice, term_choice, radius_choice, limit_choice, sort_by_choice]
-    print(choice_list)
-    print(temp_params)
+    choices = [locaton_choice, term_choice, radius_choice, limit_choice, sort_by_choice]
+    # print(choices)
+    # print(keys)
 
-    for keys in temp_params:
-        for n in choice_list:
-            if n is not 0 or '':
-                temp_params[keys] = n
+    temp_params = dict(map(lambda key, value : (key, value), keys, choices))
+    # print(temp_params)
 
-    final_params = {}
+    params = {}
+    for keys, values in temp_params.items():
+        if temp_params[keys] is not '' or 0:
+            params[keys] = values
 
-    for keys in temp_params:
-        if temp_params[keys] is not False:
-            final_params[keys] = temp_params[keys]
-
-    yelp_params = final_params
-    print(yelp_params)
+    # print(params)
  
 
 def display():
