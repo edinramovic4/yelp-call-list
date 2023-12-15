@@ -22,35 +22,54 @@
 
 import tkinter
 from tkinter import ttk
-from yelpapi import YelpAPI 
+from tkinter import messagebox
+from yelpapi import YelpAPI
+from pprint import pprint 
 
+params = {}
+results = {}
+api_key = "J_wCiYL03se4K_JN7O0A0BKew1Q9F6rnuzdOCzt2IgV6142Hm3sXSQdjIJPmSkleKhXgqWr6WVsCdyhqghoflD4Dcwqwn1wQ9jeAOzex0adIZ1b63L950iMqPYxlY3Yx"
 
 def set_data():
-    keys = ["location", "term", "radius", "limit", "sort_by"]
-
     locaton_choice = location_input.get()
-    term_choice = term_input.get()
-    radius_choice = radius_spinbox.get()
-    limit_choice = limit_spinbox.get()
-    sort_by_choice = sort_by_combobox.get()
+    if locaton_choice:
+        term_choice = term_input.get()
+        radius_choice = radius_spinbox.get()
+        limit_choice = limit_spinbox.get()
+        sort_by_choice = sort_by_combobox.get()
 
-    choices = [locaton_choice, term_choice, radius_choice, limit_choice, sort_by_choice]
-    # print(choices)
-    # print(keys)
+        keys = ["location", "term", "radius", "limit", "sort_by"]
+        choices = [locaton_choice, term_choice, radius_choice, limit_choice, sort_by_choice]
+        # print(choices)
+        # print(keys)
 
-    temp_params = dict(map(lambda key, value : (key, value), keys, choices))
-    # print(temp_params)
+        temp_params = dict(map(lambda key, value : (key, value), keys, choices))
+        # print(temp_params)
 
-    params = {}
-    for keys, values in temp_params.items():
-        if temp_params[keys] is not '' or 0:
-            params[keys] = values
+        for keys, values in temp_params.items():
+            if temp_params[keys] is not '' or 0:
+                params[keys] = values
+    else:
+        tkinter.messagebox.showwarning(title= "Error", message="Location is required.")
 
     # print(params)
  
 
 def display():
     print("Hello")
+
+def search():
+    if not params:
+        tkinter.messagebox.showwarning(title= "Error", message="Set terms first before searching.")
+    else:
+        print("Searching...")
+        with YelpAPI(api_key) as yelp_api:
+            results = yelp_api.search_query(**params)
+        
+        pprint(results)
+
+    
+
 
 
 window = tkinter.Tk()
@@ -59,17 +78,8 @@ window.title("Yelp Business Call List")
 frame = tkinter.Frame(window)
 frame.pack()
 
-api_frame = tkinter.LabelFrame(frame, text="Enter YelpAPI Key")
-api_frame.grid(row=0, column=0)
-
-api_label = tkinter.Label(api_frame, text="API Key (required)")
-api_label.grid(row=0, column=0)
-
-api_input = tkinter.Entry(api_frame)
-api_input.grid(row=1, column=0)
-
 search_terms_frame = tkinter.LabelFrame(frame, text= "Search Terms")
-search_terms_frame.grid(row= 1, column=0, padx=20, pady=20)
+search_terms_frame.grid(row= 0, column=0, padx=20, pady=20)
 
 location_label = tkinter.Label(search_terms_frame, text="Location (required)")
 location_label.grid(row=0, column=0)
@@ -102,115 +112,12 @@ sort_by_combobox.grid(row=3, column=0)
 set_button = tkinter.Button(frame, text="Set Terms", command=set_data)
 set_button.grid(row=2, column=0)
 
-display_button = tkinter.Button(frame, text="Display Results", command=display)
-display_button.grid(row=2, column=1)
+save_button = tkinter.Button(frame, text="Search and Display", command=search)
+save_button.grid(row=3, column=0)
+
+display_button = tkinter.Button(frame, text="Save and Export", command=display)
+display_button.grid(row=4, column=0)
+
+
 
 window.mainloop()
-
-
-
-def search(api_key):
-    start_params = {
-        "location": False,
-        "term": False,
-        "radius": False,
-        "limit": False,
-        "sort_by": False
-    }
-    
-    sort_by_choices = {"best_match", "rating", "review_count", "distance"}
-
-
-    start_params["location"] = input("Type location (required): ")
-    print()
-    finish = True
-
-    while(finish): # enclose switch statement into loop so it only finishes when the user is ready
-        print("Change additional terms:")
-        print("Term (String): a")
-        print("Radius in Meters (Max 40,000m = 25 mi) (Int): b")
-        print("Limit (Max 50) (Int): c")
-        print("Sort By ('best-match', 'rating', 'review_count', 'distance') (String): d")
-        print("Search : e")
-        print()
-        choice = input()
-        match choice:
-            case 'a':
-                print()
-                user_term = input("Input term: ")
-                if type(user_term) is not str:
-                    print("Invalid input, please put a correct input.")
-                    continue # place continue statements in case of incorrect inputs
-                else:
-                    start_params['term'] = user_term
-            case 'b':
-                user_radius = input("Input radius: ")
-                
-                if type(int(user_radius)) is not int:
-                    print("Invalid input, please put a correct input.")
-                    continue
-                else:
-                    start_params['radius'] = int(user_radius)
-            case 'c':
-                user_limit = input("Input limit (int): ")
-                if type(int(user_limit)) is not int:
-                    print("Invalid input, please put a correct input.")
-                    continue
-                else:
-                    start_params['limit'] = int(user_limit)
-            case 'd':
-                user_sort_by = {input("Input sort by: ")}
-                if not user_sort_by.issubset(sort_by_choices):
-                    print("Invalid input, please put a correct input.")
-                    continue 
-                else:
-                    start_params['sort_by'] = user_sort_by.pop()
-            case 'e':
-                finish = False
-            case _:
-                print("\nInvalid character. Please select a valid character.\n")
-                continue
-
-    params = {}
-    print(start_params)
-
-    for keys, values in start_params.items():
-        if start_params[keys] is not False:
-            params[keys] = values
-    
-    print(params)
-        
-    with YelpAPI(api_key, timeout_s=3.0) as yelp_api:
-        search_results = yelp_api.search_query(**params)
-        pprint(search_results)
-        print("Search complete! Results saved.")
-        menu()
-   
-# def format():
-
-# def display():
-
-
-# def save():
-
-def menu():
-    print("Select options:")
-    print("Search: 'a'")
-    print("Display: 'b'")
-    print("Save: 'c'")
-    choice = input() # call  input function to get decision
-
-    match choice:
-        case 'a':
-            search(api_key)
-        case 'b':
-            display()
-        case 'c':
-            save()
-        case _:
-            print("\nInvalid character. Please select a valid character.\n")
-            menu()
-
-api_key = input("Please enter your Yelp API key: ")
-print()
-menu() # loop back to menu start to continue program
