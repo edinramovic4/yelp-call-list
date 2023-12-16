@@ -25,6 +25,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from yelpapi import YelpAPI
 from pprint import pprint 
+import json
 
 params = {}
 results = {}
@@ -58,15 +59,24 @@ def set_data():
 def display():
     print("Hello")
 
+def format(first_results):
+    temp_results = {}
+    temp_results = first_results["businesses"]
+
+        
+    pprint(temp_results)
+    # print(json.dumps(temp_results, indent = 3))
+
 def search():
     if not params:
         tkinter.messagebox.showwarning(title= "Error", message="Set terms first before searching.")
     else:
         print("Searching...")
         with YelpAPI(api_key) as yelp_api:
-            results = yelp_api.search_query(**params)
+            first_results = yelp_api.search_query(**params)
         
-        pprint(results)
+    final_results = {}    
+    final_results = format(first_results)
 
     
 
