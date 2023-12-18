@@ -25,7 +25,8 @@ from tkinter import ttk
 from tkinter import messagebox
 from yelpapi import YelpAPI
 from pprint import pprint 
-import json
+import os
+import openpyxl
 
 params = {}
 results = {}
@@ -62,10 +63,30 @@ def display():
 def format(first_results):
     temp_results = {}
     temp_results = first_results["businesses"]
+    for n in temp_results:
+        del n["alias"]
+        del n["categories"]
+        del n["coordinates"]
+        del n["display_phone"]
+        del n["id"]
+        del n["image_url"]
+        del n["is_closed"]
+        del n["transactions"]
+        del n["url"]
+        del n["location"]["address1"]
+        del n["location"]["address2"]
+        del n["location"]["address3"]
+        del n["location"]["city"]
+        del n["location"]["country"]
+        del n["location"]["state"]
+        del n["location"]["zip_code"]
+        n["location"] = n["location"]["display_address"]
+        n["location"] = ', '.join(n["location"])
+    
 
-        
-    pprint(temp_results)
+    # pprint(temp_results)
     # print(json.dumps(temp_results, indent = 3))
+    return temp_results
 
 def search():
     if not params:
@@ -74,9 +95,9 @@ def search():
         print("Searching...")
         with YelpAPI(api_key) as yelp_api:
             first_results = yelp_api.search_query(**params)
-        
-    final_results = {}    
+           
     final_results = format(first_results)
+    pprint(final_results)
 
     
 
