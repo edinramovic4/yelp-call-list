@@ -25,11 +25,12 @@ from tkinter import ttk
 from tkinter import messagebox
 from yelpapi import YelpAPI
 from pprint import pprint 
+import json
 import os
 import openpyxl
 
 params = {}
-results = {}
+# results = []
 api_key = "J_wCiYL03se4K_JN7O0A0BKew1Q9F6rnuzdOCzt2IgV6142Hm3sXSQdjIJPmSkleKhXgqWr6WVsCdyhqghoflD4Dcwqwn1wQ9jeAOzex0adIZ1b63L950iMqPYxlY3Yx"
 
 def set_data():
@@ -57,8 +58,21 @@ def set_data():
     # print(params)
  
 
-def display():
-    print("Hello")
+def save():
+    try: 
+        results
+    except NameError:
+        tkinter.messagebox.showwarning(title= "Error", message="No results to save")
+    else:
+        print()
+        print("Name file (without '.json'):")
+        filename = input() + ".json"
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(results, f, ensure_ascii=False, indent=4)
+        print("File successfully saved!")
+
+        # json_results = json.dumps(results, indent = 3)
+        # pprint(json_results)
 
 def format(first_results):
     temp_results = {}
@@ -95,9 +109,10 @@ def search():
         print("Searching...")
         with YelpAPI(api_key) as yelp_api:
             first_results = yelp_api.search_query(**params)
-           
-    final_results = format(first_results)
-    pprint(final_results)
+    
+    global results
+    results = format(first_results)
+    pprint(results)
 
     
 
@@ -146,7 +161,7 @@ set_button.grid(row=2, column=0)
 save_button = tkinter.Button(frame, text="Search and Display", command=search)
 save_button.grid(row=3, column=0)
 
-display_button = tkinter.Button(frame, text="Save and Export", command=display)
+display_button = tkinter.Button(frame, text="Save and Export", command=save)
 display_button.grid(row=4, column=0)
 
 
