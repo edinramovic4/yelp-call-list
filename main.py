@@ -28,6 +28,7 @@ from pprint import pprint
 import json
 import os
 import openpyxl
+import pandas as pd
 
 params = {}
 # results = []
@@ -97,7 +98,6 @@ def format(first_results):
         n["location"] = n["location"]["display_address"]
         n["location"] = ', '.join(n["location"])
     
-
     # pprint(temp_results)
     # print(json.dumps(temp_results, indent = 3))
     return temp_results
@@ -112,7 +112,9 @@ def search():
     
     global results
     results = format(first_results)
+    results = pd.DataFrame.from_dict(results)
     pprint(results)
+    results = results.to_json(orient="table")
 
     
 
