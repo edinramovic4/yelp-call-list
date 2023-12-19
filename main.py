@@ -66,10 +66,13 @@ def save():
         tkinter.messagebox.showwarning(title= "Error", message="No results to save")
     else:
         print()
-        print("Name file (without '.json'):")
-        filename = input() + ".json"
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=4)
+        print("Name file (without '.xlsx'):")
+        filename = input() + ".xlsx"
+        results.to_excel(filename)
+
+        #with open(filename, 'w', encoding='utf-8') as f:
+        #    json.dump(results, f, ensure_ascii=False, indent=4)
+        
         print("File successfully saved!")
 
         # json_results = json.dumps(results, indent = 3)
@@ -114,7 +117,6 @@ def search():
     results = format(first_results)
     results = pd.DataFrame.from_dict(results)
     pprint(results)
-    results = results.to_json(orient="table")
 
     
 
@@ -163,7 +165,7 @@ set_button.grid(row=2, column=0)
 save_button = tkinter.Button(frame, text="Search and Display", command=search)
 save_button.grid(row=3, column=0)
 
-display_button = tkinter.Button(frame, text="Save and Export", command=save)
+display_button = tkinter.Button(frame, text="Save and Export (as .xlsx)", command=save)
 display_button.grid(row=4, column=0)
 
 
