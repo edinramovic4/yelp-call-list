@@ -66,9 +66,9 @@ def save():
         tkinter.messagebox.showwarning(title= "Error", message="No results to save")
     else:
         print()
-        print("Name file (without '.xlsx'):")
-        filename = input() + ".xlsx"
-        results.to_excel(filename)
+        print("Name file (without '.csv'):")
+        filename = input() + ".csv"
+        results.to_csv(filename)
 
         #with open(filename, 'w', encoding='utf-8') as f:
         #    json.dump(results, f, ensure_ascii=False, indent=4)
@@ -165,7 +165,7 @@ set_button.grid(row=2, column=0)
 save_button = tkinter.Button(frame, text="Search and Display", command=search)
 save_button.grid(row=3, column=0)
 
-display_button = tkinter.Button(frame, text="Save and Export (as .xlsx)", command=save)
+display_button = tkinter.Button(frame, text="Save and Export (as .csv)", command=save)
 display_button.grid(row=4, column=0)
 
 
