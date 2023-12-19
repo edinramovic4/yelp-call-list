@@ -23,11 +23,11 @@
 import tkinter
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import *
 from yelpapi import YelpAPI
 from pprint import pprint 
 import json
 import os
-import openpyxl
 import pandas as pd
 
 params = {}
@@ -147,7 +147,15 @@ def search():
     global results
     results = format(first_results)
     results = pd.DataFrame.from_dict(results)
-    pprint(results)
+
+    root = Tk()
+    root.title("Results")
+    display_results = tkinter.Text(root)
+    display_results.pack(expand=True, fill=BOTH)
+    display_results.insert(INSERT, results)
+    display_results['state'] = 'disabled'
+    
+    root.mainloop()
 
     
 
