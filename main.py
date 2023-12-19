@@ -22,12 +22,8 @@
 
 import tkinter
 from tkinter import ttk
-from tkinter import messagebox
 from tkinter import *
 from yelpapi import YelpAPI
-from pprint import pprint 
-import json
-import os
 import pandas as pd
 
 params = {}
@@ -99,7 +95,7 @@ def save_name():
 
 def save():
     filename = save_input.get()
-    print(filename[-4:])
+    # print(filename[-4:])
     if filename[-4:] == '.csv':
         tkinter.messagebox.showwarning(title="Error", message="Incorrect filename - remove '.csv'")
         save_name()
