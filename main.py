@@ -59,24 +59,55 @@ def set_data():
     # print(params)
  
 
-def save():
+def save_name():
     try: 
         results
     except NameError:
         tkinter.messagebox.showwarning(title= "Error", message="No results to save")
     else:
-        print()
-        print("Name file (without '.csv'):")
-        filename = input() + ".csv"
-        results.to_csv(filename)
+        save_window = tkinter.Tk()
+        save_window.title("Save File")
+
+        save_frame = tkinter.Frame(save_window)
+        save_frame.pack()
+
+        input_frame = tkinter.LabelFrame(save_frame, text="Filename")
+        input_frame.grid(row=0, column=0)
+
+        input_label = tkinter.Label(input_frame, text= "Name file (without '.csv')")
+        input_label.grid(row= 0, column=0)
+
+        global save_input
+        save_input = tkinter.Entry(input_frame)
+        save_input.grid(row=1, column=0)
+
+        save_file_button = tkinter.Button(save_frame, text="Enter", command=save)
+        save_file_button.grid(row=1, column=0)
+        # print()
+        # print("Name file (without '.csv'):")
+        # filename = input() + ".csv"
+        # results.to_csv(filename)
 
         #with open(filename, 'w', encoding='utf-8') as f:
         #    json.dump(results, f, ensure_ascii=False, indent=4)
         
-        print("File successfully saved!")
+        # print("File successfully saved!")
+        save_window.mainloop()
 
         # json_results = json.dumps(results, indent = 3)
         # pprint(json_results)
+
+def save():
+    filename = save_input.get()
+    print(filename[-4:])
+    if filename[-4:] == '.csv':
+        tkinter.messagebox.showwarning(title="Error", message="Incorrect filename - remove '.csv'")
+        save_name()
+    else:
+        filename = filename + '.csv'
+        results.to_csv(filename)
+    
+
 
 def format(first_results):
     temp_results = {}
@@ -165,7 +196,7 @@ set_button.grid(row=2, column=0)
 save_button = tkinter.Button(frame, text="Search and Display", command=search)
 save_button.grid(row=3, column=0)
 
-display_button = tkinter.Button(frame, text="Save and Export (as .csv)", command=save)
+display_button = tkinter.Button(frame, text="Save and Export (as .csv)", command=save_name)
 display_button.grid(row=4, column=0)
 
 
